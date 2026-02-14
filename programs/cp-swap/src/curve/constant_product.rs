@@ -20,26 +20,24 @@ impl ConstantProductCurve {
         input_amount: u128,
         input_vault_amount: u128,
         output_vault_amount: u128,
-    ) -> u128 {
+    ) -> Option<u128> {
         // (x + delta_x) * (y - delta_y) = x * y
         // delta_y = (delta_x * y) / (x + delta_x)
-        let numerator = input_amount.checked_mul(output_vault_amount).unwrap();
-        let denominator = input_vault_amount.checked_add(input_amount).unwrap();
-        let output_amount = numerator.checked_div(denominator).unwrap();
-        output_amount
+        let numerator = input_amount.checked_mul(output_vault_amount)?;
+        let denominator = input_vault_amount.checked_add(input_amount)?;
+        numerator.checked_div(denominator)
     }
 
     pub fn swap_base_output_without_fees(
         output_amount: u128,
         input_vault_amount: u128,
         output_vault_amount: u128,
-    ) -> u128 {
+    ) -> Option<u128> {
         // (x + delta_x) * (y - delta_y) = x * y
         // delta_x = (x * delta_y) / (y - delta_y)
-        let numerator = input_vault_amount.checked_mul(output_amount).unwrap();
-        let denominator = output_vault_amount.checked_sub(output_amount).unwrap();
-        let input_amount = numerator.checked_ceil_div(denominator).unwrap();
-        input_amount
+        let numerator = input_vault_amount.checked_mul(output_amount)?;
+        let denominator = output_vault_amount.checked_sub(output_amount)?;
+        numerator.checked_ceil_div(denominator)
     }
 
     /// Get the amount of trading tokens for the given amount of pool tokens,
@@ -163,7 +161,8 @@ mod tests {
             source_amount,
             swap_source_amount,
             swap_destination_amount,
-        );
+        )
+        .unwrap();
         assert_eq!(source_amount, expected_source_amount_swapped);
         assert_eq!(
             destination_amount_swapped,

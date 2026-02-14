@@ -121,7 +121,7 @@ impl CurveCalculator {
             input_amount_less_fees,
             input_vault_amount,
             output_vault_amount,
-        );
+        )?;
 
         let output_amount = if is_creator_fee_on_input {
             output_amount_swapped
@@ -168,22 +168,21 @@ impl CurveCalculator {
             actual_output_amount,
             input_vault_amount,
             output_vault_amount,
-        );
+        )?;
 
         let input_amount = if is_creator_fee_on_input {
             let input_amount_with_fee = Fees::calculate_pre_fee_amount(
                 input_amount_swapped,
                 trade_fee_rate + creator_fee_rate,
-            )
-            .unwrap();
-            let total_fee = input_amount_with_fee - input_amount_swapped;
+            )?;
+            let total_fee = input_amount_with_fee.checked_sub(input_amount_swapped)?;
             creator_fee = Fees::split_creator_fee(total_fee, trade_fee_rate, creator_fee_rate)?;
-            trade_fee = total_fee - creator_fee;
+            trade_fee = total_fee.checked_sub(creator_fee)?;
             input_amount_with_fee
         } else {
             let input_amount_with_fee =
-                Fees::calculate_pre_fee_amount(input_amount_swapped, trade_fee_rate).unwrap();
-            trade_fee = input_amount_with_fee - input_amount_swapped;
+                Fees::calculate_pre_fee_amount(input_amount_swapped, trade_fee_rate)?;
+            trade_fee = input_amount_with_fee.checked_sub(input_amount_swapped)?;
             input_amount_with_fee
         };
         let protocol_fee = Fees::protocol_fee(trade_fee, protocol_fee_rate)?;
@@ -266,7 +265,8 @@ pub mod test {
             source_token_amount,
             swap_source_amount,
             swap_destination_amount,
-        );
+        )
+        .unwrap();
 
         let (swap_token_0_amount, swap_token_1_amount) = match trade_direction {
             TradeDirection::ZeroForOne => (swap_source_amount, swap_destination_amount),
