@@ -7,9 +7,9 @@ edition = "2021"
 devnet = ["raydium-cp-swap/devnet"]
 
 [dependencies]
-anchor-client = { version = "0.32.1" }
-anchor-lang = { version = "0.32.1" }
-anchor-spl = { version = "0.32.1" }
+anchor-client = { workspace = true }
+anchor-lang = { workspace = true }
+anchor-spl = { workspace = true }
 raydium-cp-swap = { path = "../programs/cp-swap", features = [
     "no-entrypoint",
     "client",
