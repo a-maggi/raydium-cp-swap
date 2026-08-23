@@ -3,9 +3,9 @@ resolver = "2"
 members = ["programs/*", "client"]
 
 [workspace.dependencies]
-anchor-lang = { git = "https://github.com/solana-foundation/anchor.git", features = ["init-if-needed"] }
-anchor-spl = { git = "https://github.com/solana-foundation/anchor.git" }
-anchor-client = { git = "https://github.com/solana-foundation/anchor.git" }
+anchor-lang = { git = "https://github.com/solana-foundation/anchor.git", rev = "2dd5c2473f7964e080f5fa3bc06aa445c07396db", features = ["init-if-needed"] }
+anchor-spl = { git = "https://github.com/solana-foundation/anchor.git", rev = "2dd5c2473f7964e080f5fa3bc06aa445c07396db" }
+anchor-client = { git = "https://github.com/solana-foundation/anchor.git", rev = "2dd5c2473f7964e080f5fa3bc06aa445c07396db" }
 
 [profile.release]
 overflow-checks = true
